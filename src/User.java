@@ -1,6 +1,7 @@
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-//''''''''
+
 public class User {
     public static List<String> UserNamesList=new ArrayList<>();
     public static List<User> UsersList=new ArrayList<>();
@@ -8,7 +9,11 @@ public class User {
     public List<String>TimeLinePost=new ArrayList<>();
     public String UserName;
     public int age;
+    public Date Birthdate;
+    public String Birthdatestr;
     public boolean Kind;
+    public boolean isman;
+    public boolean married;
     public String City;
     public String Country;
     public List<String> PostCodesList=new ArrayList<>();
@@ -19,6 +24,7 @@ public class User {
     List<String> GroupCodes=new ArrayList<>();
     List<String> DirectMassageCodes=new ArrayList<>();
     List<String> LikedPostCodes=new ArrayList<>();
+
     public void LoadPostCodesList(){}
     public void LoadFollowersList(){}
     public void LoadFollowingList(){}
@@ -27,12 +33,11 @@ public class User {
     public void LoadLikedPostCodes(){}
     public void LoadTimeLinePost(){}
     public List<String>getTimeLinePost(){return TimeLinePost;}
-    public void setUserName(String _Username){
 
-    }
-    public void setPassWord(String _Bio){
+   // public void setUserName(String _Username){}
 
-    }
+   // public void setPassWord(String _Bio){}
+
     public void setBio(String _Bio){
 
     }
@@ -98,36 +103,13 @@ public class User {
     }
     public void TimeLine(){}
     public void DMHandle(){}
-}
-class BusinessUser extends User{
-    int ProfileViews=0;
-    List<String>ProfileViewers=new ArrayList<>();
-    int AgeSumOfViewers=0;
-    public void NewPostBuisness(){}
-    public void addProfileViews(){
+    public void setBirthdate(){
 
+        //this.Birthdate=  ;
+        calculateAGE();
     }
-    public void addProfileViewers(String _UserName){
+    public void calculateAGE(){
 
+        //this.age=  ;
     }
-    public void LoadProfileViewers(){
-
-    }
-
-    public String getCountryPollName(){
-        return "temp";
-    }
-    public String getCityPollName(){
-        return "temp";
-    }
-    public int getProfileViews(){
-        return -1;
-    }
-    public int getAverageAge(){
-        return -1;
-    }
-}
-class OrdinaryUser extends User{
-    boolean Private;
-    public void NewPostOrdinary(){}
 }

@@ -1,6 +1,7 @@
 public class Group extends DirectMassage{
     int NumberOfUsers;
     String Owener="";
+    String bio="";
     public void addMember(){}
     public void removeMember(){}
     public String getOwener(){return Owener;}
