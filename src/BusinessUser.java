@@ -2,9 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 class BusinessUser extends User{
-    int ProfileViews=0;
+    //Boolean Kind;
+    int ProfileViews;
     List<String> ProfileViewers=new ArrayList<>();
-    int AgeSumOfViewers=0;
+    int AgeSumOfViewers;
 
     BusinessUser(String username, String passWord, String birthdate, String type){
         this.UserName=username;
@@ -13,7 +14,10 @@ class BusinessUser extends User{
         this.setBirthdate();
         this.setBuisnessType(type);
         this.Kind=true;
+        this.ProfileViews=0;
+        this.AgeSumOfViewers=0;
         User.UserNamesList.add(this.UserName);
+        User.userMap.put(this.UserName,this);
         User.UsersList.add(this);
         User.NumberOfUsers=User.UsersList.size();
     }

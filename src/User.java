@@ -1,10 +1,11 @@
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
+import static java.util.Calendar.*;
 
 public class User {
     public static List<String> UserNamesList=new ArrayList<>();
     public static List<User> UsersList=new ArrayList<>();
+    static Map<String,User> userMap =new HashMap<>();
     public static int NumberOfUsers=0;
     public List<String>TimeLinePost=new ArrayList<>();
     public String UserName;
@@ -13,6 +14,28 @@ public class User {
     public String Birthdatestr;
     public boolean Kind;
     public boolean isman;
+
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setIsman(boolean isman) {
+        this.isman = isman;
+    }
+
+    public void setMarried(boolean married) {
+        this.married = married;
+    }
+
+    public void setCity(String city) {
+        City = city;
+    }
+
+    public void setCountry(String country) {
+        Country = country;
+    }
+
     public boolean married;
     public String City;
     public String Country;
@@ -24,6 +47,8 @@ public class User {
     List<String> GroupCodes=new ArrayList<>();
     List<String> DirectMassageCodes=new ArrayList<>();
     List<String> LikedPostCodes=new ArrayList<>();
+    public  List<Post> posts=new ArrayList<>();
+
 
     public void LoadPostCodesList(){}
     public void LoadFollowersList(){}
@@ -39,7 +64,7 @@ public class User {
    // public void setPassWord(String _Bio){}
 
     public void setBio(String _Bio){
-
+this.Bio=_Bio;
     }
     public void addPostCode(String _PostCode){
 
@@ -88,10 +113,13 @@ public class User {
     public String getPost(int index,boolean poll){
         return "temp";
     }
-    public String getFollowing(int index,boolean poll){
-        return FollowingsList.get(index);
-    }
-    public String getFollowers(int index,boolean poll){
+    public List<User> getFollowing(){
+        List<User> result=new ArrayList<>();
+        for (String i:getFollowings()){
+            result.add(User.UsersList.get(User.UserNamesList.indexOf(i)));
+        }
+        return result;
+    }    public String getFollowers(int index,boolean poll){
         return FollowersList.get(index);
     }
     public void NewPost(){}
@@ -105,11 +133,33 @@ public class User {
     public void DMHandle(){}
     public void setBirthdate(){
 
-        //this.Birthdate=  ;
+        //this.Birthdate=;
+        try {
+            Birthdate=DateFormat.dateFormat.StrToDate(Birthdatestr);
+        }
+        catch (Exception e){
+            System.out.println("Error at User 139");
+        }
         calculateAGE();
     }
     public void calculateAGE(){
+        Calendar a=getCalender(this.Birthdate),b=getCalender(new Date());
+        int diff = b.get(YEAR) - a.get(YEAR);
+        if (a.get(MONTH) > b.get(MONTH) ||
+                (a.get(MONTH) == b.get(MONTH) && a.get(DATE) > b.get(DATE))) {
+            diff--;
+        }
 
-        //this.age=  ;
+        try {
+            age= diff;
+        }
+        catch (Exception e){
+            System.out.println("Error in User Line 154");
+        }
+    }
+    public static Calendar getCalender(Date date){
+          Calendar calendar=Calendar.getInstance(Locale.US);
+          calendar.setTime(date);
+          return calendar;
     }
 }

@@ -1,20 +1,21 @@
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Post {
-    boolean Type;
+
     static List<Post> PostsList=new ArrayList<>();
-    static List<String>PostsCodesList=new ArrayList<>();
+    static Map<String,Post> postMap =new HashMap<>();
+    static List<String> PostsCodesList=new ArrayList<>();
     static int NumberOfPosts=0;
     public String PostCode="";
+    public static long PostCodeStatic=0;
     String PosterName="";
     List<String> RepostersList=new ArrayList<>();
-    int NumberOfRetwiets=0;
-    int NumberOfLikes=0;
-    Time time;
+    int NumberOfRetwiets;
+    int NumberOfLikes;
+    Date date;
     List<String> LikedList=new ArrayList<>();
-    String Caption;
+     String Caption;
     //List<Massage> Comments=new ArrayList<>();
     List<String>CommentsCodesList=new ArrayList<>();
     public String getPostCode(){return PostCode;}
