@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 public class DirectMassage {
-    boolean Type=false;
+
+    boolean isGroup=false;
     public static int DirectNumbers=0;
     public static List<String>DirectCodesList=new ArrayList<>();
     List<String>MassageCodes=new ArrayList<>();

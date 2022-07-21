@@ -6,9 +6,17 @@ public class User {
     public static List<String> UserNamesList=new ArrayList<>();
     public static List<User> UsersList=new ArrayList<>();
     static Map<String,User> userMap =new HashMap<>();
+  /////////////////////////////////////////
+    Map<String,User> FollowerMap =new HashMap<>();
+    Map<String,User> FollowingMap =new HashMap<>();
+    ///////////////////////////////////////
     public static int NumberOfUsers=0;
     public List<String>TimeLinePost=new ArrayList<>();
+
+    public List<Post> tempTimeLinePost=new ArrayList<>();
+
     public String UserName;
+    public String Name;
     public int age;
     public Date Birthdate;
     public String Birthdatestr;

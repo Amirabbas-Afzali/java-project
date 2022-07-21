@@ -1,10 +1,12 @@
-import java.sql.Time;
+
 import java.util.Date;
 
 public class OrdinaryPost extends Post{
-    Boolean Kind=false;
     boolean isprivate;
+    OrdinaryPost(){}
     OrdinaryPost(String postcode, String text, OrdinaryUser user, Date time1, boolean Isprivate){
+        this.Kind=false;
+        this.userposter=user;
         this.PostCode=postcode;
         this.Caption=text;
         this.PosterName=user.UserName;
@@ -16,5 +18,6 @@ public class OrdinaryPost extends Post{
         Post.postMap.put(postcode,this);
         Post.PostsCodesList.add(postcode);
         Post.NumberOfPosts++;
+        user.PostCodesList.add(postcode);
     }
 }

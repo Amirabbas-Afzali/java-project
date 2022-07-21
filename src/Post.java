@@ -13,6 +13,8 @@ public class Post {
     List<String> RepostersList=new ArrayList<>();
     int NumberOfRetwiets;
     int NumberOfLikes;
+    Boolean Kind;
+    User userposter;
     Date date;
     List<String> LikedList=new ArrayList<>();
      String Caption;

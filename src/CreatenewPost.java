@@ -47,7 +47,9 @@ public class CreatenewPost {
         }
     }
     public String createpostcode(){
-        return String.valueOf(Post.PostCodeStatic);
+        String result=String.valueOf(Post.PostCodeStatic);
+        Post.PostCodeStatic++;
+        return result;
     }
     public boolean isprivate(String strr){
         if(strr.equals("1")){return  true;}

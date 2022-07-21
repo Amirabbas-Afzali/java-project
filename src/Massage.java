@@ -1,5 +1,6 @@
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Massage {
@@ -9,7 +10,7 @@ public class Massage {
     String massageString;
     String massageCode="";
     String SenderUserName="";
-    Time time;
+    Date date;
     public static void addMassage(){}
     public String getMassageCode(){return massageCode;};
 
@@ -21,8 +22,18 @@ public class Massage {
         return SenderUserName;
     }
 
-    public Time getTime() {
-        return time;
+    @Override
+    public String toString() {
+        return "Massage{" +
+                "massageString='" + massageString + '\'' +
+                ", massageCode='" + massageCode + '\'' +
+                ", SenderUserName='" + SenderUserName + '\'' +
+                ", date=" + date +
+                '}';
+    }
+
+    public Date getTime() {
+        return date;
     }
 
     public static void setMassageNumber(int massageNumber) {
@@ -35,7 +46,7 @@ public class Massage {
     }
 
     public void setTime(Time time) {
-        this.time = time;
+        this.date = time;
     }
     public void Update(){}
 
