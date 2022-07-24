@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,22 +44,25 @@ public class UserTableDBC {
                businessUser1.UserName=resultSet.getString("UserName");
                 businessUser1.Name=resultSet.getString("Name");
                 businessUser1.Birthdate=resultSet.getDate("BirthDay");
+                businessUser1.age=businessUser1.calculateAGE();
                 businessUser1.Kind=resultSet.getBoolean("Kind");
                 businessUser1.isman=resultSet.getBoolean("isman");
                 businessUser1.married=resultSet.getBoolean("married");
                 businessUser1.City=resultSet.getString("City");
                 businessUser1.Country=resultSet.getString("Country");
                 businessUser1.PostCodesList=StringtoListCode(resultSet.getString("PostCodeList"));
-                 businessUser1.FollowersList=StringtoListCode(resultSet.getString("FollowersList"));   // Fill HashMap
-                businessUser1.FollowingsList=StringtoListCode(resultSet.getString("FollowingList"));    // Fill HashMap
+                 businessUser1.FollowersList=StringtoListCode(resultSet.getString("FollowersList"));
+                businessUser1.FollowingsList=StringtoListCode(resultSet.getString("FollowingList"));
                 businessUser1.Bio=resultSet.getString("bio");
                 businessUser1.PassWord=resultSet.getString("Password");
                 businessUser1.GroupCodes=StringtoListCode(resultSet.getString("GroupCodes"));
                 businessUser1.DirectMassageCodes=StringtoListCode(resultSet.getString("DirectMassagesCodes"));
                 businessUser1.LikedPostCodes=StringtoListCode(resultSet.getString("LikedPostsCodes"));
-                businessUser1.ProfileViewers=StringtoListCode(resultSet.getString("BusProfileViewrs"));
+                businessUser1.ProfileViewers=StringtoListCode(resultSet.getString("BusProfileViewers"));
                 businessUser1.buisnessTypeINT=resultSet.getInt("BusTypeINT");
-                businessUser1.setBuisnessType(Integer.toString(resultSet.getInt("BusTypeINT")));
+               businessUser1.setBuisnessType(Integer.toString(resultSet.getInt("BusTypeINT")));
+                businessUser1.BlockedList=StringtoListCode(resultSet.getString("BlockedList"));
+                businessUser1.CloseFriendList=StringtoListCode(resultSet.getString("CloseFriendList"));
                 result= (T) businessUser1;
 
             }
@@ -68,6 +72,7 @@ public class UserTableDBC {
                 businessUser1.UserName=resultSet.getString("UserName");
                 businessUser1.Name=resultSet.getString("Name");
                 businessUser1.Birthdate=resultSet.getDate("BirthDay");
+                businessUser1.age=businessUser1.calculateAGE();
                 businessUser1.Kind=resultSet.getBoolean("Kind");
                 businessUser1.isman=resultSet.getBoolean("isman");
                 businessUser1.married=resultSet.getBoolean("married");
@@ -75,14 +80,15 @@ public class UserTableDBC {
                 businessUser1.City=resultSet.getString("City");
                 businessUser1.Country=resultSet.getString("Country");
                 businessUser1.PostCodesList=StringtoListCode(resultSet.getString("PostCodeList"));
-                businessUser1.FollowersList=StringtoListCode(resultSet.getString("FollowersList"));   // Fill HashMap
-                businessUser1.FollowingsList=StringtoListCode(resultSet.getString("FollowingList"));    // Fill HashMap
+                businessUser1.FollowersList=StringtoListCode(resultSet.getString("FollowersList"));
+                businessUser1.FollowingsList=StringtoListCode(resultSet.getString("FollowingList"));
                 businessUser1.Bio=resultSet.getString("bio");
                 businessUser1.PassWord=resultSet.getString("Password");
                 businessUser1.GroupCodes=StringtoListCode(resultSet.getString("GroupCodes"));
                 businessUser1.DirectMassageCodes=StringtoListCode(resultSet.getString("DirectMassagesCodes"));
                 businessUser1.LikedPostCodes=StringtoListCode(resultSet.getString("LikedPostsCodes"));
-
+                businessUser1.BlockedList=StringtoListCode(resultSet.getString("BlockedList"));
+                businessUser1.CloseFriendList=StringtoListCode(resultSet.getString("CloseFriendList"));
 
                 result= (T) businessUser1;
 
@@ -98,7 +104,8 @@ public class UserTableDBC {
             PreparedStatement statement = connection.prepareStatement("" +
                     "INSERT INTO usertable (UserName,Name,BirthDay,Kind,isman,married,City" +
                     ",Country,PostCodeList,FollowersList,FollowingList,bio,Password" +
-                    ",GroupCodes,DirectMassagesCodes,LikedPostsCodes,BusProfileViewrs,BusTypeINT) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    ",GroupCodes,DirectMassagesCodes,LikedPostsCodes,BusProfileViewers,BusTypeINT,BlockedList,CloseFriendList) " +
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             statement.setString(1, businessUser.UserName);
             statement.setString(2, businessUser.Name);
             statement.setDate(3, date);
@@ -117,6 +124,8 @@ public class UserTableDBC {
             statement.setString(16, generatePostCodeString(businessUser.LikedPostCodes));
             statement.setString(17, generatePostCodeString(businessUser.ProfileViewers));
             statement.setInt(18, businessUser.buisnessTypeINT);
+            statement.setString(19, generatePostCodeString(businessUser.BlockedList));
+            statement.setString(20, generatePostCodeString(businessUser.CloseFriendList));
 
             statement.executeUpdate();
             statement.close();
@@ -126,7 +135,8 @@ public class UserTableDBC {
             PreparedStatement statement= connection.prepareStatement("" +
                     "INSERT INTO usertable (UserName,Name,BirthDay,Kind,isman,married,OrdPrivate,City" +
                     ",Country,PostCodeList,FollowersList,FollowingList,bio,Password" +
-                    ",GroupCodes,DirectMassagesCodes,LikedPostsCodes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    ",GroupCodes,DirectMassagesCodes,LikedPostsCodes,BlockedList,CloseFriendList) " +
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             statement.setString(1,businessUser.UserName);
             statement.setString(2, businessUser.Name);
             statement.setDate(3, date);
@@ -144,6 +154,8 @@ public class UserTableDBC {
             statement.setString(15,generatePostCodeString(businessUser.GroupCodes));
             statement.setString(16,generatePostCodeString(businessUser.DirectMassageCodes));
             statement.setString(17,generatePostCodeString(businessUser.LikedPostCodes));
+            statement.setString(18, generatePostCodeString(businessUser.BlockedList));
+            statement.setString(19, generatePostCodeString(businessUser.CloseFriendList));
 
             statement.executeUpdate();
             statement.close();
@@ -159,9 +171,24 @@ public class UserTableDBC {
            }
         }
 
+        public List<String> getUserNamesList() throws SQLException {
+            Statement statement=connection.createStatement();
+            ResultSet rs = statement.executeQuery("select UserName from usertable");
+            List<String> arr=new ArrayList<>();
+            while(rs.next()) {
+                arr.add(rs.getString("UserName"));
+            }
+            statement.close();
+            return arr;
+        }
+
     public List<String> StringtoListCode(String input){
+            if(input!=null){
         String[] Arr=input.split(",");
-        return Arrays.stream(Arr).toList();
+                List<String> list=new ArrayList<>(Arrays.stream(Arr).toList());
+                 return list;
+            }
+            return new ArrayList<String>();
     }
 
     public boolean isBusiness(String username) throws SQLException {
@@ -177,12 +204,16 @@ public class UserTableDBC {
     }
 
     public String generatePostCodeString(List<String> input){
+            if(input!=null){
         StringBuilder result= new StringBuilder();
+
         for (String i:input){
             result.append(",").append(i);
         }
-        result = new StringBuilder(result.substring(1));
-        return result.toString();
+        if (result.length()>1){
+            result = new StringBuilder(result.substring(1));
+        return result.toString();}}
+            return  "";
     }
 
 }

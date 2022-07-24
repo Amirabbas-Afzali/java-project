@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -94,7 +95,12 @@ public class DircectMassageTableDBC {
 
 
     static List<String> getPostCode(String input){
-        return Arrays.stream(input.split(",")).toList();
+        if(input!=null){
+            String[] Arr=input.split(",");
+            List<String> list=new ArrayList<>(Arrays.stream(Arr).toList());
+            return list;
+        }
+        return new ArrayList<String>();
     }
 
     public String generatePostCodeString(List<String> input){
@@ -104,6 +110,17 @@ public class DircectMassageTableDBC {
         }
         result = new StringBuilder(result.substring(1));
         return result.toString();
+    }
+
+    public List<String> getDirectMassageCodesList() throws SQLException {
+        Statement statement=connection.createStatement();
+        ResultSet rs = statement.executeQuery("select DirectMassageCode from directmassagetable");
+        List<String> arr=new ArrayList<>();
+        while(rs.next()) {
+            arr.add(rs.getString("DirectMassageCode"));
+        }
+        statement.close();
+        return arr;
     }
 
 

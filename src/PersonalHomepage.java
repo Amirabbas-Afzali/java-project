@@ -1,13 +1,14 @@
+import java.sql.SQLException;
 
 public class PersonalHomepage {
     static PersonalHomepage personalHomepage=new PersonalHomepage();
     User user;
 
-    public void start(User usertemp){
+    public void start(User usertemp) throws SQLException {
         boolean flag=true;
         while (flag){
             String str, strtemp = "Enter a number:\n1.Create new post\n2.show timeline\n3.Complete or Edit personal information\n4.My chats and PVs\n5.My contacts (followers & followings & ...)" +
-                    "\n6.Show posts\n7.back ";
+                    "\n6.Show My posts\n7.back ";
             System.out.println(strtemp);
             str = Main.scanner.nextLine();
             str.trim();
@@ -28,8 +29,7 @@ public class PersonalHomepage {
                 MychatsandPVs.mychatsandPVs.start();
             }
             else if (str.equals("5")) {
-            Mycontacts.mycontacts.user=usertemp;
-                Mycontacts.mycontacts.start();
+                Mycontacts.mycontacts.start(usertemp);
             }
             else if (str.equals("6")) {
                 ShowPosts.showPosts.user=usertemp;

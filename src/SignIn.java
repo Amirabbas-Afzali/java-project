@@ -1,11 +1,12 @@
 import java.nio.charset.Charset;
+import java.sql.SQLException;
 import java.util.Random;
 import java.util.Scanner;
 
 public class SignIn {
     static SignIn signIn=new SignIn();
 
-    public void start(){
+    public void start() throws SQLException {
         boolean flag1=true,flag2=true,endprogram=false;
         String inputcaptcha,usename="",password="",str,strtemp="Enter a number:\n1.login\n2.Create new account\n3.Password recovery\n4.end";
         System.out.println(strtemp);
@@ -37,7 +38,8 @@ public class SignIn {
             }
 
         }
-            if(!endprogram&&checkpass(searchuser(usename),password).equals("Welcome")){PersonalHomepage.personalHomepage.start(searchuser(usename));}
+            if(!endprogram&&checkpass(searchuser(usename),password).equals("Welcome"))
+            {PersonalHomepage.personalHomepage.start(searchuser(usename));}
         }
         else if(str.equals("2")){
             CreatAccount.creatAccount.start();
@@ -46,14 +48,14 @@ public class SignIn {
             PasswordRecovery.passwordRecovery.start();
         }
         else if(str.equals("4")){
-            System.out.println("by!");
+            System.out.println("bye!");
         }
         else {
             System.out.println("Invalid command!");
         }
     }
     public String existuser(String username){
-        for(User user: MAINInformation.mainInformation.users){
+        for(User user: MAINInformation.mainInformation.users.values()){
             if(user.UserName.equals(username)){
                 return "This user exists";
             }
@@ -61,7 +63,7 @@ public class SignIn {
        return  "This user not found!";
     }
     public User searchuser(String username){
-        for(User user: MAINInformation.mainInformation.users){
+        for(User user: MAINInformation.mainInformation.users.values()){
             if(user.UserName.equals(username)){
                 return user;
             }

@@ -1,17 +1,21 @@
 
-import java.util.Date;
-import java.util.Scanner;
+import java.sql.SQLException;
 
 public class CompletePersonalInformation {
     static  CompletePersonalInformation completePersonalInformation=new CompletePersonalInformation();
       User user;
-    public void start(){
+    public void start() throws SQLException {
         boolean flag = true, flag2 = true, flag3 = true;
-        String male,married,city , country ,bio;
+        String male,married,city , country ,bio,name;
 
         System.out.println("Username : "+user.UserName+"\nPassword : "+user.PassWord+
    "\nBirthDate : "+DateFormat.dateFormat.reportdate2(user.Birthdate)+"\nAge : "
         +user.age);
+
+
+        System.out.println("Enter your Name :");
+        name= Main.scanner.nextLine();
+        if(name.length()>0){user.setName(name);}
 
             System.out.println("Are you male?\n1.Yes\n2.No");
                while (flag2){

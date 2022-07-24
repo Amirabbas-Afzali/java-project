@@ -28,7 +28,7 @@ public class ShowTimeline {
         reference=this.TimeLinePostCodesList();
         List<Post> result=new ArrayList<>();
         for (int i=0;i<n;i++){
-            result.add(Post.postMap.get(reference.get((reference.size()-i-1))));
+            result.add(MAINInformation.mainInformation.posts.get(reference.get((reference.size()-i-1))));
         }
         return result;
     }

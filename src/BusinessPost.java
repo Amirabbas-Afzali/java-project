@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +12,7 @@ class BusinessPost extends Post{
     String Caption;
     String description;
     BusinessPost(){}
-    BusinessPost(String postcode, String text,String describe, BusinessUser user, Date time1){
+    BusinessPost(String postcode, String text,String describe, BusinessUser user, Date time1) throws SQLException {
         this.userposter=user;
         this.Kind=true;
         this.PostCode=postcode;
@@ -23,11 +24,13 @@ class BusinessPost extends Post{
         this.NumberOfRetwiets=0;
         this.buisnessType=user.buisnessType;
          this.buisnessTypeINT=setBuisnessTypeINT(user.buisnessType);
-        Post.PostsList.add(this);
-        Post.postMap.put(postcode,this);
-        Post.PostsCodesList.add(postcode);
-        Post.NumberOfPosts++;
-        user.PostCodesList.add(postcode);
+       // Post.PostsList.add(this);
+       // Post.postMap.put(postcode,this);
+        Post.PostsCodesList1.add(postcode);
+       // Post.NumberOfPosts++;
+        user.addPostCodeToPosts(postcode);
+        //user.PostCodesList.add(postcode);
+
     }
 
     public void LoadViewersUserNames(){}
@@ -47,5 +50,29 @@ class BusinessPost extends Post{
         if(buisnessType1.equals(BuisnessType.Artist)){return 4;}
         if(buisnessType1.equals(BuisnessType.Sport)){return  5;}
  return 0;
+    }
+
+    public void ShowBusPost(){
+        System.out.println("Post Code : "+PostCode+"  ,  "+"Poster : "+PosterName+
+                "\n  Date:  "+DateFormat.dateFormat.reportdate(date)+"   ,   Likes : "+LikedList.size()+"  " +
+                " \n Views : "+ ViewersUserNames.size()+"  ,    " +" Repost : "+RepostersList.size()+"  " +
+                "\n  Business Type : "+buisnessType.toString()+
+                "\n Caption : "+Caption+"  \n  Description : "+description);
+
+        String input="";
+        while (!input.equals("4")){
+            System.out.println("");
+            System.out.println("1:view comments\n 2:view Likes\n 3:view Reposters \n 4:Back");
+            input=Main.scanner.nextLine();
+            if (input.equals("1")){
+
+            }
+            if (input.equals("2")){
+
+            }
+            if (input.equals("3")){
+
+            }
+        }
     }
 }

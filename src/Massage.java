@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 public class Massage {
-    public static int MassageNumber=0;
-    public static List<Massage>MassageList=new ArrayList<>();
+    public static Integer MassageCodeStatic;
     public static List<String>MassageCodes= new ArrayList<>();
+
     String massageString;
     String massageCode="";
     String SenderUserName="";
@@ -36,9 +36,6 @@ public class Massage {
         return date;
     }
 
-    public static void setMassageNumber(int massageNumber) {
-        MassageNumber = massageNumber;
-    }
     public static Massage getMassage(String MassageCode){return new Massage();}
 
     public void setMassageString(String massageString) {

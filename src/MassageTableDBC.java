@@ -35,9 +35,9 @@ public class MassageTableDBC {
         ResultSet resultSet= statement.executeQuery(quary);
         Massage massage=new Massage();
         while (resultSet.next()){
-            massage.massageCode=resultSet.getNString("MassageCode");
-            massage.massageString=resultSet.getNString("MassageString");
-            massage.SenderUserName=resultSet.getNString("SenderUserName");
+            massage.massageCode=resultSet.getString("MassageCode");
+            massage.massageString=resultSet.getString("MassageString");
+            massage.SenderUserName=resultSet.getString("SenderUserName");
             massage.date=resultSet.getDate("date");
         }
         statement.close();
@@ -71,6 +71,17 @@ public class MassageTableDBC {
         if (!delete){
             setNewMassage(input);
         }
+    }
+
+    public List<String> getMassageCodesList() throws SQLException {
+        Statement statement=connection.createStatement();
+        ResultSet rs = statement.executeQuery("select MassageCode from massagetable");
+        List<String> arr=new ArrayList<>();
+        while(rs.next()) {
+            arr.add(rs.getString("MassageCode"));
+        }
+        statement.close();
+        return arr;
     }
 
 }

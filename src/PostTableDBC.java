@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -33,29 +34,29 @@ public class PostTableDBC {
             boolean isBus=resultSet.getBoolean("Kind");
             if (isBus){
                 BusinessPost businessPost=new  BusinessPost();
-                businessPost.PostCode=resultSet.getNString("PostCode");
-                businessPost.Caption=resultSet.getNString("Caption");
+                businessPost.PostCode=resultSet.getString("PostCode");
+                businessPost.Caption=resultSet.getString("Caption");
                 businessPost.date=resultSet.getDate("date");
                 businessPost.Kind=isBus;
-                businessPost.RepostersList=getPostCode(resultSet.getNString("RepostersList"));
-                businessPost.LikedList=getPostCode(resultSet.getNString("LikedList"));
-                businessPost.CommentsCodesList=getPostCode(resultSet.getNString("CommentsCodesList"));
-                businessPost.ViewersUserNames=getPostCode(resultSet.getNString("BusViewersUserNames"));
-                businessPost.PosterName=resultSet.getNString("PosterUserName");
-                businessPost.description=resultSet.getNString("BusDescription");
+                businessPost.RepostersList=getPostCode(resultSet.getString("RepostersList"));
+                businessPost.LikedList=getPostCode(resultSet.getString("LikedList"));
+                businessPost.CommentsCodesList=getPostCode(resultSet.getString("CommentsCodesList"));
+                businessPost.ViewersUserNames=getPostCode(resultSet.getString("BusViewersUserNames"));
+                businessPost.PosterName=resultSet.getString("PosterUserName");
+                businessPost.description=resultSet.getString("BusDescription");
                 businessPost.buisnessType=setBuisnessType(resultSet.getInt("BusTypeINT"));
                 result=(T)businessPost;
             }
             else {
                 OrdinaryPost businessPost=new  OrdinaryPost();
-                businessPost.PostCode=resultSet.getNString("PostCode");
-                businessPost.Caption=resultSet.getNString("Caption");
+                businessPost.PostCode=resultSet.getString("PostCode");
+                businessPost.Caption=resultSet.getString("Caption");
                 businessPost.date=resultSet.getDate("date");
                 businessPost.Kind=isBus;
-                businessPost.RepostersList=getPostCode(resultSet.getNString("RepostersList"));
-                businessPost.LikedList=getPostCode(resultSet.getNString("LikedList"));
-                businessPost.CommentsCodesList=getPostCode(resultSet.getNString("CommentsCodesList"));
-                businessPost.PosterName=resultSet.getNString("PosterUserName");
+                businessPost.RepostersList=getPostCode(resultSet.getString("RepostersList"));
+                businessPost.LikedList=getPostCode(resultSet.getString("LikedList"));
+                businessPost.CommentsCodesList=getPostCode(resultSet.getString("CommentsCodesList"));
+                businessPost.PosterName=resultSet.getString("PosterUserName");
                 businessPost.isprivate=resultSet.getBoolean("Ordisprivate");
                 //Add User
                 businessPost.userposter=UserTableDBC.userTableDBC.getUser(businessPost.PosterName);
@@ -109,6 +110,17 @@ public class PostTableDBC {
 
     }
 
+    public List<String> getPostCodesList() throws SQLException {
+        Statement statement=connection.createStatement();
+        ResultSet rs = statement.executeQuery("select PostCode from posttable");
+        List<String> arr=new ArrayList<>();
+        while(rs.next()) {
+            arr.add(rs.getString("PostCode"));
+        }
+        statement.close();
+        return arr;
+    }
+
     public <T extends Post> void EditorDeletePost(T postinput,boolean delete)throws SQLException {
             PreparedStatement st = connection.prepareStatement("DELETE FROM posttable WHERE PostCode = '" + postinput.PostCode + "';");
             st.executeUpdate();
@@ -120,7 +132,12 @@ public class PostTableDBC {
     }
 
     static List<String> getPostCode(String input){
-        return Arrays.stream(input.split(",")).toList();
+            if(input!=null){
+                String[] Arr=input.split(",");
+                List<String> list=new ArrayList<>(Arrays.stream(Arr).toList());
+                return list;
+            }
+            return new ArrayList<String>();
     }
 
     public BuisnessType setBuisnessType(Integer type){
@@ -154,12 +171,16 @@ public class PostTableDBC {
     }
 
     public String generatePostCodeString(List<String> input){
-        StringBuilder result= new StringBuilder();
-        for (String i:input){
-            result.append(",").append(i);
-        }
-        result = new StringBuilder(result.substring(1));
-        return result.toString();
+        if(input!=null){
+            StringBuilder result= new StringBuilder();
+
+            for (String i:input){
+                result.append(",").append(i);
+            }
+            if (result.length()>1){
+                result = new StringBuilder(result.substring(1));
+                return result.toString();}}
+        return  "";
     }
 
 }
