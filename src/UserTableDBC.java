@@ -63,6 +63,8 @@ public class UserTableDBC {
                businessUser1.setBuisnessType(Integer.toString(resultSet.getInt("BusTypeINT")));
                 businessUser1.BlockedList=StringtoListCode(resultSet.getString("BlockedList"));
                 businessUser1.CloseFriendList=StringtoListCode(resultSet.getString("CloseFriendList"));
+                businessUser1.StoryCodeList=StringtoListCode(resultSet.getString("StoryCodeList"));
+                businessUser1.Blocked=resultSet.getInt("Blocked");
                 result= (T) businessUser1;
 
             }
@@ -89,7 +91,9 @@ public class UserTableDBC {
                 businessUser1.LikedPostCodes=StringtoListCode(resultSet.getString("LikedPostsCodes"));
                 businessUser1.BlockedList=StringtoListCode(resultSet.getString("BlockedList"));
                 businessUser1.CloseFriendList=StringtoListCode(resultSet.getString("CloseFriendList"));
-
+                businessUser1.RequestList=StringtoListCode(resultSet.getString("RequestList"));
+                businessUser1.StoryCodeList=StringtoListCode(resultSet.getString("StoryCodeList"));
+                businessUser1.Blocked=resultSet.getInt("Blocked");
                 result= (T) businessUser1;
 
             }     }
@@ -104,8 +108,9 @@ public class UserTableDBC {
             PreparedStatement statement = connection.prepareStatement("" +
                     "INSERT INTO usertable (UserName,Name,BirthDay,Kind,isman,married,City" +
                     ",Country,PostCodeList,FollowersList,FollowingList,bio,Password" +
-                    ",GroupCodes,DirectMassagesCodes,LikedPostsCodes,BusProfileViewers,BusTypeINT,BlockedList,CloseFriendList) " +
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    ",GroupCodes,DirectMassagesCodes,LikedPostsCodes,BusProfileViewers" +
+                    ",BusTypeINT,BlockedList,CloseFriendList,StoryCodeList,Blocked) " +
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             statement.setString(1, businessUser.UserName);
             statement.setString(2, businessUser.Name);
             statement.setDate(3, date);
@@ -126,7 +131,8 @@ public class UserTableDBC {
             statement.setInt(18, businessUser.buisnessTypeINT);
             statement.setString(19, generatePostCodeString(businessUser.BlockedList));
             statement.setString(20, generatePostCodeString(businessUser.CloseFriendList));
-
+            statement.setString(21, generatePostCodeString(businessUser.StoryCodeList));
+            statement.setInt(22, businessUser.Blocked);
             statement.executeUpdate();
             statement.close();
         }
@@ -135,8 +141,8 @@ public class UserTableDBC {
             PreparedStatement statement= connection.prepareStatement("" +
                     "INSERT INTO usertable (UserName,Name,BirthDay,Kind,isman,married,OrdPrivate,City" +
                     ",Country,PostCodeList,FollowersList,FollowingList,bio,Password" +
-                    ",GroupCodes,DirectMassagesCodes,LikedPostsCodes,BlockedList,CloseFriendList) " +
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    ",GroupCodes,DirectMassagesCodes,LikedPostsCodes,BlockedList,CloseFriendList,RequestList,StoryCodeList,Blocked) " +
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             statement.setString(1,businessUser.UserName);
             statement.setString(2, businessUser.Name);
             statement.setDate(3, date);
@@ -156,7 +162,9 @@ public class UserTableDBC {
             statement.setString(17,generatePostCodeString(businessUser.LikedPostCodes));
             statement.setString(18, generatePostCodeString(businessUser.BlockedList));
             statement.setString(19, generatePostCodeString(businessUser.CloseFriendList));
-
+            statement.setString(20, generatePostCodeString(businessUser.RequestList));
+            statement.setString(21, generatePostCodeString(businessUser.StoryCodeList));
+            statement.setInt(22, businessUser.Blocked);
             statement.executeUpdate();
             statement.close();
         }
@@ -183,12 +191,15 @@ public class UserTableDBC {
         }
 
     public List<String> StringtoListCode(String input){
-            if(input!=null){
-        String[] Arr=input.split(",");
+        if(input!=null){
+            if (input.length()>0){
+                String[] Arr=input.split(",");
                 List<String> list=new ArrayList<>(Arrays.stream(Arr).toList());
-                 return list;
+
+                return list;
             }
-            return new ArrayList<String>();
+        }
+        return new ArrayList<String>();
     }
 
     public boolean isBusiness(String username) throws SQLException {
@@ -204,16 +215,19 @@ public class UserTableDBC {
     }
 
     public String generatePostCodeString(List<String> input){
-            if(input!=null){
-        StringBuilder result= new StringBuilder();
+        if(input!=null){
+            if (input.size()>0){
+                StringBuilder result= new StringBuilder();
 
-        for (String i:input){
-            result.append(",").append(i);
+                for (String i:input){
+                    result.append(",").append(i);
+                }
+                if (result.length()>0){
+                    result = new StringBuilder(result.substring(1));
+                    return result.toString();}
+            }
         }
-        if (result.length()>1){
-            result = new StringBuilder(result.substring(1));
-        return result.toString();}}
-            return  "";
+        return  null;
     }
 
 }

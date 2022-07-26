@@ -37,6 +37,12 @@ public class StaticTableDBC {
             if (WhatStatic.contains("User")){
                 result= resultSet.getInt("UserNumber");
             }
+            if (WhatStatic.contains("Story")){
+                result= resultSet.getInt("StoryNumber");
+            }
+            if (WhatStatic.contains("Like")){
+                result= resultSet.getInt("LikeNumber");
+            }
             statement.close();
             return result;
         }
@@ -56,6 +62,12 @@ public class StaticTableDBC {
         }
         if (WhatStatic.contains("User")){
             field="UserNumber";
+        }
+        if (WhatStatic.contains("Story")){
+            field="StoryNumber";
+        }
+        if (WhatStatic.contains("Like")){
+            field="LikeNumber";
         }
         String query="UPDATE staticstable SET  "+field+" ="+value1.toString()+" WHERE First=1;";
         PreparedStatement statement= connection.prepareStatement("" +

@@ -9,7 +9,7 @@ public class Mycontacts {
     public void start(User Loginuser) throws SQLException {
         boolean flag = true, flag2 = true;
         String strusename, strtemp = "Enter a number:\n1.My Followers\n2.My Followings\n3.All Suggestions" +
-                "\n4.Blocked Users\n5.My Close Friends \n6.back",str;
+                "\n4.Blocked Users\n5.My Close Friends\n6.Back",str;
 
         while (flag2){
             System.out.println("");
@@ -21,7 +21,14 @@ public class Mycontacts {
                 flag = false;flag2=false;
             }
             else if (str.equals("1")) {
-                ShowFollowers(Loginuser,str,Loginuser);
+                if(!Loginuser.Kind){
+                    OrdinaryUser ordinaryUser1=(OrdinaryUser )Loginuser;
+                    if(ordinaryUser1.Private) {
+                        ShowFollowers1(Loginuser, str, Loginuser);
+                    }
+                    else {ShowFollowers(Loginuser,str,Loginuser);}
+                }
+                else {ShowFollowers(Loginuser,str,Loginuser);}
                 flag = false;
             }
             else if (str.equals("2")) {
@@ -67,7 +74,7 @@ public class Mycontacts {
 
                 flag = false;
             }
-            else {System.out.println("Invalid command!");}
+            else {System.out.println("Invalid command!");flag=false;}
 
         }
         }
@@ -253,10 +260,46 @@ public class Mycontacts {
         }
     }
 
+    public void ShowUsergeneralRequest(User user1,String str,User Loginuser) throws SQLException {
+        String strusename;
+        System.out.println("");
+        System.out.println("Enter a Username to show user's details : ");
+        strusename=Main.scanner.nextLine();
+        if(user1.RequestMap.containsKey(strusename)){
+            if(Loginuser.Kind){
+                if(user1.RequestMap.get(strusename).Kind){
+                    BusinessUser businessUser1;
+                    businessUser1= (BusinessUser) Loginuser;
+                    businessUser1.ShowBusUserByBusUser((BusinessUser) user1.RequestMap.get(strusename),Integer.parseInt(str),Loginuser);
+                }
+                else {
+                    BusinessUser businessUser1;
+                    businessUser1= (BusinessUser) Loginuser;
+                    businessUser1.ShowOrdUserByBusUser((OrdinaryUser) user1.RequestMap.get(strusename),Integer.parseInt(str),Loginuser);
+                }
+            }
+            else {
+                if(user1.RequestMap.get(strusename).Kind){
+                    OrdinaryUser businessUser1;
+                    businessUser1= (OrdinaryUser) Loginuser;
+                    businessUser1.ShowBusUserByOrdUser((BusinessUser) user1.RequestMap.get(strusename),Integer.parseInt(str),Loginuser);
+                }
+                else {
+                    OrdinaryUser businessUser1;
+                    businessUser1= (OrdinaryUser) Loginuser;
+                    businessUser1.ShowOrdUserByOrdUser((OrdinaryUser) user1.RequestMap.get(strusename),Integer.parseInt(str),Loginuser);
+                }
+            }
+        }
+        else {
+            System.out.println("Not Exists !");
+        }
+    }
 
 
 
     public void ShowFollowers(User user2,String str,User Loginuser) throws SQLException {
+
         if (user2.FollowerMap.size() > 0) {
             int c = 1;
             for (User user1 : user2.FollowerMap.values()) {
@@ -268,6 +311,39 @@ public class Mycontacts {
         } else {
             System.out.println("Empty !");
         }
+    }
+
+    public void ShowFollowers1(User user2,String str,User Loginuser) throws SQLException {
+          System.out.println("1.Followers\n2.Follow Requests");
+          String temp=Main.scanner.nextLine();
+          if(temp.equals("1")){
+        if (user2.FollowerMap.size() > 0) {
+            int c = 1;
+            for (User user1 : user2.FollowerMap.values()) {
+                System.out.println(c + "." + user1.UserName);
+                c++;
+            }
+            ShowUsergeneralFollower(user2,str,Loginuser);
+
+        } else {
+            System.out.println("Empty !");
+        }
+          }
+          else if(temp.equals("2")){
+              if (user2.RequestMap.size() > 0) {
+                  int c = 1;
+                  for (User user1 : user2.RequestMap.values()) {
+                      System.out.println(c + "." + user1.UserName);
+                      c++;
+                  }
+                  ShowUsergeneralRequest(user2,"7",Loginuser);
+
+              } else {
+                  System.out.println("Empty !");
+              }
+          }
+          else {System.out.println("Invalid command!");}
+
     }
 
     public void ShowFollowings(User user2,String str,User Loginuser) throws SQLException {

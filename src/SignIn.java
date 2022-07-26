@@ -32,7 +32,7 @@ public class SignIn {
                         flag1=false;flag2=false;
                     }
                     else {
-                        System.out.println("CpatchaCode was entered incorrectly !");
+                        System.out.println("Cpatcha Code was entered incorrectly !");
                     }}
                    }
             }

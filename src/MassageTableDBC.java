@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class MassageTableDBC {
             massage.massageString=resultSet.getString("MassageString");
             massage.SenderUserName=resultSet.getString("SenderUserName");
             massage.date=resultSet.getDate("date");
+            massage.ReplyMassagesCodes=StringtoListCode(resultSet.getString("ReplysCode"));
         }
         statement.close();
         return massage;
@@ -47,11 +49,12 @@ public class MassageTableDBC {
     public void setNewMassage(Massage massage) throws SQLException {
         java.sql.Date date=new java.sql.Date(massage.date.getTime());
         PreparedStatement statement= connection.prepareStatement("" +
-                "INSERT INTO massagetable (MassageCode,MassageString,SenderUserName,date) VALUES (?,?,?,?)");
+                "INSERT INTO massagetable (MassageCode,MassageString,SenderUserName,date,ReplysCode) VALUES (?,?,?,?,?)");
         statement.setString(1,massage.massageCode);
         statement.setString(2, massage.massageString);
         statement.setString(3, massage.SenderUserName);
         statement.setDate(4,date);
+        statement.setString(5,generateMassageCodeString(massage.ReplyMassagesCodes));
         statement.executeUpdate();
         statement.close();
     }
@@ -82,6 +85,32 @@ public class MassageTableDBC {
         }
         statement.close();
         return arr;
+    }
+    public String generateMassageCodeString(List<String> input){
+        if(input!=null){
+            if (input.size()>0){
+                StringBuilder result= new StringBuilder();
+
+                for (String i:input){
+                    result.append(",").append(i);
+                }
+                if (result.length()>0){
+                    result = new StringBuilder(result.substring(1));
+                    return result.toString();}
+            }
+        }
+        return  null;
+    }
+    public List<String> StringtoListCode(String input){
+        if(input!=null){
+            if (input.length()>0){
+                String[] Arr=input.split(",");
+                List<String> list=new ArrayList<>(Arrays.stream(Arr).toList());
+
+                return list;
+            }
+        }
+        return new ArrayList<String>();
     }
 
 }

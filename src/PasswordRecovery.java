@@ -30,10 +30,29 @@ public class PasswordRecovery {
             }
     }
     public boolean checkinfo(User user,String city,String country,String birth){
-        if(!user.City.equals(city)){return  false;}
-        if(!user.Country.equals(country)){return  false;}
-        if(!user.Birthdatestr.equals(birth)){return  false;}
-return  true;
+        if (user.City==null){
+            System.out.println("You don't have enough info for recovery");
+            return false;
+        }
+        else {
+            if(!user.City.equals(city)){return  false;}
+        }
+        if (user.Country==null){
+            System.out.println("You don't have enough info for recovery");
+            return false;
+        }
+        else {
+            if(!user.Country.equals(country)){return  false;}
+        }
+        if (user.Birthdatestr==null){
+            System.out.println("You don't have enough info for recovery");
+            return false;
+        }
+        else {
+            if(!user.Birthdatestr.equals(birth)){return  false;}
+        }
+
+        return  true;
     }
 
 }

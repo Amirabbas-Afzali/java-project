@@ -2,6 +2,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 class OrdinaryUser extends User{
+    static  OrdinaryUser ordinaryUser=new OrdinaryUser();
     boolean Private;
     OrdinaryUser(){}
     OrdinaryUser(String username,String passWord,String birthdate, boolean Isprivate){
@@ -11,6 +12,7 @@ class OrdinaryUser extends User{
         this.setBirthdate();
         this.age=this.calculateAGE();
         PostCodesList=new ArrayList<>();
+        this.Blocked=0;
         this.Kind=false;
         this.Private=Isprivate;
         User.UserNamesList.add(this.UserName);
@@ -26,7 +28,8 @@ class OrdinaryUser extends User{
         while (flag){
             int c=1;
             System.out.println("");
-            if(TYPE!=6){
+            if(TYPE!=7){
+                if(TYPE!=6){
                 if(TYPE!=4){
                 if(TYPE!=2){ System.out.println(c+".Follow");c++;}
             if(TYPE==2){System.out.println(c+".Unfollow");c++;}
@@ -38,6 +41,7 @@ class OrdinaryUser extends User{
                 if(TYPE==1||TYPE==5){ System.out.println(c+".Remove");c++;}
                     System.out.println(c+".Show User's followings");c++;
                     System.out.println(c+".Show User's followers");c++;
+                    System.out.println(c+".Show User's Stories");c++;
                 }
             else {System.out.println(c+".Unblock User");c++;}
             System.out.println(c+".Back");c++;}
@@ -48,15 +52,31 @@ class OrdinaryUser extends User{
                 System.out.println(c+".Show User's Posts");c++;
                 System.out.println(c+".Show User's followings");c++;
                 System.out.println(c+".Show User's followers");c++;
+                    System.out.println(c+".Show User's Stories");c++;
+                    System.out.println(c+".Back");c++;
+            }}
+            else {
+                System.out.println(c+".Confirm");c++;
+                System.out.println(c+".Delete");c++;
                 System.out.println(c+".Back");c++;
+
             }
 
             input=Main.scanner.nextLine();
             if(TYPE==1){
             if (input.equals("1")){
                 if(!Loginuser.FollowingMap.containsValue(ordinaryUser)) {
-                    Loginuser.setFollow(ordinaryUser);
-                    System.out.println("Followed !");
+                    if(!ordinaryUser.Private){
+                        Loginuser.setFollow(ordinaryUser);
+                        System.out.println("Followed !");}
+                    else {
+                        if(!ordinaryUser.RequestMap.containsValue(Loginuser)){
+                            Loginuser.setRequest(ordinaryUser);
+                            System.out.println("Requested !");}
+                        else {
+                            System.out.println("You have already requested this user !");
+                        }
+                    }
                 }
                 else {
                     System.out.println("This user is on your FollowerList");
@@ -66,16 +86,21 @@ class OrdinaryUser extends User{
              if(!Loginuser.BlockedMap.containsValue(ordinaryUser)){
                  Loginuser.setBlockedUser(ordinaryUser);
                  System.out.println("Blocked !");
+                 flag=false;
              }
              else{System.out.println("You have already blocked this user !");}
             }
            else if (input.equals("3")){
-              //sendMassage
+                if(!ordinaryUser.BlockedMap.containsValue(Loginuser)&&!Loginuser.BlockedMap.containsValue(ordinaryUser)){
+                    Loginuser.sendMassage(ordinaryUser.UserName);}
+                else {
+                    System.out.println("You can't send massage  (You are in the block list of this user or vice versa) !");
+                }
             }
             else if (input.equals("4")){
-                if(!ordinaryUser.Private) {
-                    ShowPosts.showPosts.user = ordinaryUser;
-                    ShowPosts.showPosts.start();
+                if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
+                  //  ShowPosts.showPosts.user = ordinaryUser;
+                    ShowPosts.showPosts.start(Loginuser,ordinaryUser);
                 }
                 else {System.out.println("This Account is Private !");}
             }
@@ -97,16 +122,22 @@ class OrdinaryUser extends User{
                 }
             }
             else if (input.equals("7")){
-                if(!ordinaryUser.Private) {
+                if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
                     Mycontacts.mycontacts.ShowFollowings(ordinaryUser,"6",Loginuser);}
                 else {System.out.println("This Account is Private !");}
             }
             else if (input.equals("8")){
-                if(!ordinaryUser.Private) {
+                if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
                     Mycontacts.mycontacts.ShowFollowers(ordinaryUser,"6",Loginuser);}
                 else {System.out.println("This Account is Private !");}
             }
             else if (input.equals("9")){
+                if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
+                    ordinaryUser.ShowStory(Loginuser);
+                }
+                else {System.out.println("This Account is Private !");}
+            }
+            else if (input.equals("10")){
                 flag=false;
             }
             else {System.out.println("Invalid command!");}
@@ -126,30 +157,41 @@ class OrdinaryUser extends User{
                     if(!Loginuser.BlockedMap.containsValue(ordinaryUser)){
                         Loginuser.setBlockedUser(ordinaryUser);
                         System.out.println("Blocked !");
+                        flag=false;
                     }
                     else{System.out.println("You have already blocked this user");}
                 }
                 else if (input.equals("3")){
-                    //sendMassage
+                    if(!Loginuser.BlockedMap.containsValue(ordinaryUser)){
+                        Loginuser.sendMassage(ordinaryUser.UserName);}
+                    else {
+                        System.out.println("You can't send massage  (You are in the block list of this user) !");
+                    }
                 }
                 else if (input.equals("4")){
-                    if(!ordinaryUser.Private) {
-                        ShowPosts.showPosts.user = ordinaryUser;
-                        ShowPosts.showPosts.start();
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
+                    //    ShowPosts.showPosts.user = ordinaryUser;
+                        ShowPosts.showPosts.start(Loginuser,ordinaryUser);
                     }
                     else {System.out.println("This Account is Private !");}
                 }
                 else if (input.equals("5")){
-                    if(!ordinaryUser.Private) {
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
                         Mycontacts.mycontacts.ShowFollowings(ordinaryUser,"6",Loginuser);}
                     else {System.out.println("This Account is Private !");}
                 }
                 else if (input.equals("6")){
-                    if(!ordinaryUser.Private) {
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
                         Mycontacts.mycontacts.ShowFollowers(ordinaryUser,"6",Loginuser);}
                     else {System.out.println("This Account is Private !");}
                 }
                 else if (input.equals("7")){
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
+                        ordinaryUser.ShowStory(Loginuser);
+                    }
+                    else {System.out.println("This Account is Private !");}
+                }
+                else if (input.equals("8")){
                     flag=false;
                 }
                 else {System.out.println("Invalid command!");}
@@ -158,8 +200,17 @@ class OrdinaryUser extends User{
            else if(TYPE==3){
                 if (input.equals("1")){
                     if(!Loginuser.FollowingMap.containsValue(ordinaryUser)) {
-                        Loginuser.setFollow(ordinaryUser);
-                        System.out.println("Followed !");
+                        if(!ordinaryUser.Private){
+                            Loginuser.setFollow(ordinaryUser);
+                            System.out.println("Followed !");}
+                        else {
+                            if(!ordinaryUser.RequestMap.containsValue(Loginuser)){
+                                Loginuser.setRequest(ordinaryUser);
+                                System.out.println("Requested !");}
+                            else {
+                                System.out.println("You have already requested this user !");
+                            }
+                        }
                     }
                     else {
                         System.out.println("This user is on your FollowerList");
@@ -169,30 +220,41 @@ class OrdinaryUser extends User{
                     if(!Loginuser.BlockedMap.containsValue(ordinaryUser)){
                         Loginuser.setBlockedUser(ordinaryUser);
                         System.out.println("Blocked !");
+                        flag=false;
                     }
                     else{System.out.println("You have already blocked this user !");}
                 }
                 else if (input.equals("3")){
-                    //sendMassage
+                    if(!ordinaryUser.BlockedMap.containsValue(Loginuser)&&!Loginuser.BlockedMap.containsValue(ordinaryUser)){
+                        Loginuser.sendMassage(ordinaryUser.UserName);}
+                    else {
+                        System.out.println("You can't send massage  (You are in the block list of this user or vice versa) !");
+                    }
                 }
                 else if (input.equals("4")){
-                    if(!ordinaryUser.Private) {
-                        ShowPosts.showPosts.user = ordinaryUser;
-                        ShowPosts.showPosts.start();
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
+                    //    ShowPosts.showPosts.user = ordinaryUser;
+                        ShowPosts.showPosts.start(Loginuser,ordinaryUser);
                     }
                     else {System.out.println("This Account is Private !");}
                 }
                 else if (input.equals("5")){
-                    if(!ordinaryUser.Private) {
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
                         Mycontacts.mycontacts.ShowFollowings(ordinaryUser,"6",Loginuser);}
                     else {System.out.println("This Account is Private !");}
                 }
                 else if (input.equals("6")){
-                    if(!ordinaryUser.Private) {
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
                         Mycontacts.mycontacts.ShowFollowers(ordinaryUser,"6",Loginuser);}
                     else {System.out.println("This Account is Private !");}
                 }
                 else if (input.equals("7")){
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
+                        ordinaryUser.ShowStory(Loginuser);
+                    }
+                    else {System.out.println("This Account is Private !");}
+                }
+                else if (input.equals("8")){
                     flag=false;
                 }
                 else {System.out.println("Invalid command!");}
@@ -215,8 +277,17 @@ class OrdinaryUser extends User{
             else if(TYPE==5){
                 if (input.equals("1")){
                     if(!Loginuser.FollowingMap.containsValue(ordinaryUser)) {
-                        Loginuser.setFollow(ordinaryUser);
-                        System.out.println("Followed !");
+                        if(!ordinaryUser.Private){
+                            Loginuser.setFollow(ordinaryUser);
+                            System.out.println("Followed !");}
+                        else {
+                            if(!ordinaryUser.RequestMap.containsValue(Loginuser)){
+                                Loginuser.setRequest(ordinaryUser);
+                                System.out.println("Requested !");}
+                            else {
+                                System.out.println("You have already requested this user !");
+                            }
+                        }
                     }
                     else {
                         System.out.println("This user is on your FollowerList");
@@ -227,16 +298,21 @@ class OrdinaryUser extends User{
                     if(!Loginuser.BlockedMap.containsValue(ordinaryUser)){
                         Loginuser.setBlockedUser(ordinaryUser);
                         System.out.println("Blocked !");
+                        flag=false;
                     }
                     else{System.out.println("You have already blocked this user !");}
                 }
                 else if (input.equals("3")){
-                    //sendMassage
+                    if(!ordinaryUser.BlockedMap.containsValue(Loginuser)&&!Loginuser.BlockedMap.containsValue(ordinaryUser)){
+                        Loginuser.sendMassage(ordinaryUser.UserName);}
+                    else {
+                        System.out.println("You can't send massage  (You are in the block list of this user or vice versa) !");
+                    }
                 }
                 else if (input.equals("4")){
-                    if(!ordinaryUser.Private) {
-                        ShowPosts.showPosts.user = ordinaryUser;
-                        ShowPosts.showPosts.start();
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
+                      //  ShowPosts.showPosts.user = ordinaryUser;
+                        ShowPosts.showPosts.start(Loginuser,ordinaryUser);
                     }
                     else {System.out.println("This Account is Private !");}
                 }
@@ -258,16 +334,22 @@ class OrdinaryUser extends User{
                     }
                 }
                 else if (input.equals("7")){
-                    if(!ordinaryUser.Private) {
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
                         Mycontacts.mycontacts.ShowFollowings(ordinaryUser,"6",Loginuser);}
                     else {System.out.println("This Account is Private !");}
                 }
                 else if (input.equals("8")){
-                    if(!ordinaryUser.Private) {
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
                         Mycontacts.mycontacts.ShowFollowers(ordinaryUser,"6",Loginuser);}
                     else {System.out.println("This Account is Private !");}
                 }
                 else if (input.equals("9")){
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
+                        ordinaryUser.ShowStory(Loginuser);
+                    }
+                    else {System.out.println("This Account is Private !");}
+                }
+                else if (input.equals("10")){
                     flag=false;
                 }
                 else {System.out.println("Invalid command!");}
@@ -275,8 +357,17 @@ class OrdinaryUser extends User{
             else if(TYPE==6){
                 if (input.equals("1")){
                     if(!Loginuser.FollowingMap.containsValue(ordinaryUser)) {
-                        Loginuser.setFollow(ordinaryUser);
-                        System.out.println("Followed !");
+                        if(!ordinaryUser.Private){
+                            Loginuser.setFollow(ordinaryUser);
+                            System.out.println("Followed !");}
+                        else {
+                            if(!ordinaryUser.RequestMap.containsValue(Loginuser)){
+                                Loginuser.setRequest(ordinaryUser);
+                                System.out.println("Requested !");}
+                            else {
+                                System.out.println("You have already requested this user !");
+                            }
+                        }
                     }
                     else {
                         System.out.println("This user is on your FollowerList");
@@ -286,15 +377,20 @@ class OrdinaryUser extends User{
                     if(!Loginuser.BlockedMap.containsValue(ordinaryUser)){
                         Loginuser.setBlockedUser(ordinaryUser);
                         System.out.println("Blocked !");
+                        flag=false;
                     }
                     else{System.out.println("You have already blocked this user !");}
                 }
                 else if (input.equals("3")){
-                    //sendMassage
+                    if(!ordinaryUser.BlockedMap.containsValue(Loginuser)&&!Loginuser.BlockedMap.containsValue(ordinaryUser)){
+                        Loginuser.sendMassage(ordinaryUser.UserName);}
+                    else {
+                        System.out.println("You can't send massage  (You are in the block list of this user or vice versa) !");
+                    }
                 }
                 else if (input.equals("4")){
-                    ShowPosts.showPosts.user = ordinaryUser;
-                    ShowPosts.showPosts.start();
+                  //  ShowPosts.showPosts.user = ordinaryUser;
+                    ShowPosts.showPosts.start(Loginuser,ordinaryUser);
                 }
                 else if (input.equals("5")){
                     //ings
@@ -305,9 +401,37 @@ class OrdinaryUser extends User{
                     Mycontacts.mycontacts.ShowFollowers(ordinaryUser,"6",Loginuser);
                 }
                 else if (input.equals("7")){
+                    if(!ordinaryUser.Private||Loginuser.FollowingMap.containsValue(ordinaryUser)) {
+                        ordinaryUser.ShowStory(Loginuser);
+                    }
+                    else {System.out.println("This Account is Private !");}
+                }
+
+                else if (input.equals("8")){
                     flag=false;
                 }
                 else {System.out.println("Invalid command!");}
+            }
+            else if(TYPE==7){
+                if (input.equals("1")){
+                    if(Loginuser.RequestMap.containsValue(ordinaryUser)){
+                        Loginuser.setDeleteRequest(ordinaryUser);
+                        ordinaryUser.setFollow(Loginuser);
+                        System.out.println("Confirmed.");
+                    }
+                    flag=false;
+                }
+                else if (input.equals("2")){
+                    Loginuser.setDeleteRequest(ordinaryUser);
+                    System.out.println("Deleted..");
+                    flag=false;
+                }
+                else if (input.equals("3")){
+                    flag=false;
+                }
+                else {System.out.println("Invalid command!");}
+
+
             }
 
 
@@ -326,7 +450,8 @@ class OrdinaryUser extends User{
         while (flag){
             int c=1;
             System.out.println("");
-            if(TYPE!=6){
+            if(TYPE!=7){
+                if(TYPE!=6){
                 if(TYPE!=4){
                 if(TYPE!=2){ System.out.println(c+".Follow");c++;}
             if(TYPE==2){System.out.println(c+".Unfollow");c++;}
@@ -338,6 +463,8 @@ class OrdinaryUser extends User{
                 if(TYPE==1||TYPE==5){ System.out.println(c+".Remove");c++;}
                     System.out.println(c+".Show User's followings");c++;
                     System.out.println(c+".Show User's followers");c++;
+                    System.out.println(c+".Show User's Stories");c++;
+
                 }
             else {System.out.println(c+".Unblock User");c++;}
             System.out.println(c+".Back");c++;}
@@ -348,7 +475,14 @@ class OrdinaryUser extends User{
                 System.out.println(c+".Show User's Posts");c++;
                 System.out.println(c+".Show User's followings");c++;
                 System.out.println(c+".Show User's followers");c++;
+                    System.out.println(c+".Show User's Stories");c++;
+                    System.out.println(c+".Back");c++;
+            }}
+            else {
+                System.out.println(c+".Confirm");c++;
+                System.out.println(c+".Delete");c++;
                 System.out.println(c+".Back");c++;
+
             }
 
 
@@ -367,15 +501,20 @@ class OrdinaryUser extends User{
                     if(!Loginuser.BlockedMap.containsValue(ordinaryUser)){
                         Loginuser.setBlockedUser(ordinaryUser);
                         System.out.println("Blocked !");
+                        flag=false;
                     }
                     else{System.out.println("You have already blocked this user !");}
                 }
                 else if (input.equals("3")){
-                    //sendMassage
+                    if(!ordinaryUser.BlockedMap.containsValue(Loginuser)&&!Loginuser.BlockedMap.containsValue(ordinaryUser)){
+                        Loginuser.sendMassage(ordinaryUser.UserName);}
+                    else {
+                        System.out.println("You can't send massage  (You are in the block list of this user or vice versa) !");
+                    }
                 }
                 else if (input.equals("4")){
-                        ShowPosts.showPosts.user = ordinaryUser;
-                        ShowPosts.showPosts.start();
+                   //     ShowPosts.showPosts.user = ordinaryUser;
+                    ShowPosts.showPosts.start(Loginuser,ordinaryUser);
                 }
                 else if (input.equals("5")){
                     if(!Loginuser.CloseFriendMap.containsValue(ordinaryUser)){
@@ -401,6 +540,9 @@ class OrdinaryUser extends User{
                     Mycontacts.mycontacts.ShowFollowers(ordinaryUser,"6",Loginuser);
                 }
                 else if (input.equals("9")){
+                    ordinaryUser.ShowStory(Loginuser);
+                }
+                else if (input.equals("10")){
                     flag=false;
                 }
                 else {System.out.println("Invalid command!");}
@@ -419,15 +561,20 @@ class OrdinaryUser extends User{
                     if(!Loginuser.BlockedMap.containsValue(ordinaryUser)){
                         Loginuser.setBlockedUser(ordinaryUser);
                         System.out.println("Blocked !");
+                        flag=false;
                     }
                     else{System.out.println("You have already blocked this user");}
                 }
                 else if (input.equals("3")){
-                    //sendMassage
+                    if(!ordinaryUser.BlockedMap.containsValue(Loginuser)&&!Loginuser.BlockedMap.containsValue(ordinaryUser)){
+                        Loginuser.sendMassage(ordinaryUser.UserName);}
+                    else {
+                        System.out.println("You can't send massage  (You are in the block list of this user or vice versa) !");
+                    }
                 }
                 else if (input.equals("4")){
-                        ShowPosts.showPosts.user = ordinaryUser;
-                        ShowPosts.showPosts.start();
+                      //  ShowPosts.showPosts.user = ordinaryUser;
+                    ShowPosts.showPosts.start(Loginuser,ordinaryUser);
                 }
                 else if (input.equals("5")){
                     Mycontacts.mycontacts.ShowFollowings(ordinaryUser,"6",Loginuser);
@@ -436,6 +583,9 @@ class OrdinaryUser extends User{
                     Mycontacts.mycontacts.ShowFollowers(ordinaryUser,"6",Loginuser);
                 }
                 else if (input.equals("7")){
+                    ordinaryUser.ShowStory(Loginuser);
+                }
+                else if (input.equals("8")){
                     flag=false;
                 }
                 else {System.out.println("Invalid command!");}
@@ -455,15 +605,20 @@ class OrdinaryUser extends User{
                     if(!Loginuser.BlockedMap.containsValue(ordinaryUser)){
                         Loginuser.setBlockedUser(ordinaryUser);
                         System.out.println("Blocked !");
+                        flag=false;
                     }
                     else{System.out.println("You have already blocked this user !");}
                 }
                 else if (input.equals("3")){
-                    //sendMassage
+                    if(!ordinaryUser.BlockedMap.containsValue(Loginuser)&&!Loginuser.BlockedMap.containsValue(ordinaryUser)){
+                        Loginuser.sendMassage(ordinaryUser.UserName);}
+                    else {
+                        System.out.println("You can't send massage  (You are in the block list of this user or vice versa) !");
+                    }
                 }
                 else if (input.equals("4")){
-                        ShowPosts.showPosts.user = ordinaryUser;
-                        ShowPosts.showPosts.start();
+                   //     ShowPosts.showPosts.user = ordinaryUser;
+                    ShowPosts.showPosts.start(Loginuser,ordinaryUser);
                 }
                 else if (input.equals("5")){
                     Mycontacts.mycontacts.ShowFollowings(ordinaryUser,"6",Loginuser);
@@ -472,6 +627,9 @@ class OrdinaryUser extends User{
                     Mycontacts.mycontacts.ShowFollowers(ordinaryUser,"6",Loginuser);
                 }
                 else if (input.equals("7")){
+                    ordinaryUser.ShowStory(Loginuser);
+                }
+                else if (input.equals("8")){
                     flag=false;
                 }
                 else {System.out.println("Invalid command!");}
@@ -505,15 +663,20 @@ class OrdinaryUser extends User{
                     if(!Loginuser.BlockedMap.containsValue(ordinaryUser)){
                         Loginuser.setBlockedUser(ordinaryUser);
                         System.out.println("Blocked !");
+                        flag=false;
                     }
                     else{System.out.println("You have already blocked this user !");}
                 }
                 else if (input.equals("3")){
-                    //sendMassage
+                    if(!ordinaryUser.BlockedMap.containsValue(Loginuser)&&!Loginuser.BlockedMap.containsValue(ordinaryUser)){
+                        Loginuser.sendMassage(ordinaryUser.UserName);}
+                    else {
+                        System.out.println("You can't send massage  (You are in the block list of this user or vice versa) !");
+                    }
                 }
                 else if (input.equals("4")){
-                    ShowPosts.showPosts.user = ordinaryUser;
-                    ShowPosts.showPosts.start();
+                   // ShowPosts.showPosts.user = ordinaryUser;
+                    ShowPosts.showPosts.start(Loginuser,ordinaryUser);
                 }
                 else if (input.equals("5")){
                     if(Loginuser.CloseFriendMap.containsValue(ordinaryUser)){
@@ -539,6 +702,9 @@ class OrdinaryUser extends User{
                     Mycontacts.mycontacts.ShowFollowers(ordinaryUser,"6",Loginuser);
                 }
                 else if (input.equals("9")){
+                    ordinaryUser.ShowStory(Loginuser);
+                }
+                else if (input.equals("10")){
                     flag=false;
                 }
                 else {System.out.println("Invalid command!");}
@@ -557,15 +723,20 @@ class OrdinaryUser extends User{
                     if(!Loginuser.BlockedMap.containsValue(ordinaryUser)){
                         Loginuser.setBlockedUser(ordinaryUser);
                         System.out.println("Blocked !");
+                        flag=false;
                     }
                     else{System.out.println("You have already blocked this user !");}
                 }
                 else if (input.equals("3")){
-                    //sendMassage
+                    if(!ordinaryUser.BlockedMap.containsValue(Loginuser)&&!Loginuser.BlockedMap.containsValue(ordinaryUser)){
+                        Loginuser.sendMassage(ordinaryUser.UserName);}
+                    else {
+                        System.out.println("You can't send massage  (You are in the block list of this user or vice versa) !");
+                    }
                 }
                 else if (input.equals("4")){
-                    ShowPosts.showPosts.user = ordinaryUser;
-                    ShowPosts.showPosts.start();
+                  //  ShowPosts.showPosts.user = ordinaryUser;
+                    ShowPosts.showPosts.start(Loginuser,ordinaryUser);
                 }
                 else if (input.equals("5")){
                     //ings
@@ -576,10 +747,35 @@ class OrdinaryUser extends User{
                     Mycontacts.mycontacts.ShowFollowers(ordinaryUser,"6",Loginuser);
                 }
                 else if (input.equals("7")){
+                    ordinaryUser.ShowStory(Loginuser);
+                }
+                else if (input.equals("8")){
                     flag=false;
                 }
                 else {System.out.println("Invalid command!");}
             }
+            else if(TYPE==7){
+                if (input.equals("1")){
+                    if(Loginuser.RequestMap.containsValue(ordinaryUser)){
+                        ordinaryUser.setFollow(Loginuser);
+                        Loginuser.setDeleteRequest(ordinaryUser);
+                        System.out.println("Confirmed.");
+                    }
+                    flag=false;
+                }
+                else if (input.equals("2")){
+                    Loginuser.setDeleteRequest(ordinaryUser);
+                    System.out.println("Deleted.");
+                    flag=false;
+                }
+                else if (input.equals("3")){
+                    flag=false;
+                }
+                else {System.out.println("Invalid command!");}
+
+
+            }
+
 
             else {System.out.println("Invalid command!");}
         }
