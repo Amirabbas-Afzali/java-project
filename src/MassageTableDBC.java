@@ -39,6 +39,7 @@ public class MassageTableDBC {
             massage.massageCode=resultSet.getString("MassageCode");
             massage.massageString=resultSet.getString("MassageString");
             massage.SenderUserName=resultSet.getString("SenderUserName");
+            massage.LikeCodes=StringtoListCode(resultSet.getString("LikeCodes"));
             massage.date=resultSet.getDate("date");
             massage.ReplyMassagesCodes=StringtoListCode(resultSet.getString("ReplysCode"));
         }
@@ -49,12 +50,13 @@ public class MassageTableDBC {
     public void setNewMassage(Massage massage) throws SQLException {
         java.sql.Date date=new java.sql.Date(massage.date.getTime());
         PreparedStatement statement= connection.prepareStatement("" +
-                "INSERT INTO massagetable (MassageCode,MassageString,SenderUserName,date,ReplysCode) VALUES (?,?,?,?,?)");
+                "INSERT INTO massagetable (MassageCode,MassageString,SenderUserName,date,ReplysCode,LikeCodes) VALUES (?,?,?,?,?,?)");
         statement.setString(1,massage.massageCode);
         statement.setString(2, massage.massageString);
         statement.setString(3, massage.SenderUserName);
         statement.setDate(4,date);
         statement.setString(5,generateMassageCodeString(massage.ReplyMassagesCodes));
+        statement.setString(6,generateMassageCodeString(massage.LikeCodes));
         statement.executeUpdate();
         statement.close();
     }

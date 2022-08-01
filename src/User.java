@@ -247,8 +247,8 @@ public class User {
 
     public List<User> getFollowing(){
         List<User> result=new ArrayList<>();
-        for (String i:getFollowings()){
-            result.add(MAINInformation.mainInformation.users.get(User.UserNamesList.indexOf(i)));
+        for (String i:FollowingsList){
+            result.add(MAINInformation.mainInformation.users.get(i));
         }
         return result;
     }
@@ -457,7 +457,7 @@ public class User {
         UserTableDBC.userTableDBC.EditorDeleteUser(this,false);
     }
 
-    public  void ShowAuser(User Loginuser,User  mokhatab) throws SQLException {
+    public static void ShowAuser(User Loginuser,User  mokhatab) throws SQLException {
         if(mokhatab.Kind){
             if(Loginuser.Kind){
                 BusinessUser businessUser=(BusinessUser)mokhatab;

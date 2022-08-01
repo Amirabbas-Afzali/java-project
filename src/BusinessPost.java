@@ -77,11 +77,15 @@ class BusinessPost extends Post{
                 }
                 String input2="";
                 while (!input2.equals("-2")){
-                    System.out.println("If you want to view a comment inter comment code\n -2:Back");
+                    System.out.println("If you want to view a comment inter comment code\n-1:if you want to view a commenter \n-2:Back");
                     input2=Main.scanner.nextLine();
                     if (this.CommentsCodesList.contains(input2)){
                         MAINInformation.mainInformation.massages.get(input2).ShowMassage(Viewer);
                     }
+                    if (input2.equals("-1")){
+                        ShowUser(Viewer);
+                    }
+
                 }
             }
             if (input.equals("2")){
@@ -89,10 +93,20 @@ class BusinessPost extends Post{
                     MAINInformation.mainInformation.likeHandleMap.get(i).ShowLikeHandle(false,new Date(),false,false);
                 }
                 // TODO: 7/25/2022 View Users
+                System.out.println("If you want to view a liker Enter Yes ");
+                String Yes=Main.scanner.nextLine().trim();
+                if (Yes.equals("Yes")){
+                    ShowUser(Viewer);
+                }
             }
             if (input.equals("3")){
                 System.out.println(RepostersList.toString());
                 // TODO: 8/25/2022 View Users
+                System.out.println("If you want to view a RePoster Enter Yes ");
+                String Yes=Main.scanner.nextLine().trim();
+                if (Yes.equals("Yes")){
+                    ShowUser(Viewer);
+                }
             }
             if (input.equals("4")){
                 if (!this.UserNameLiked(Viewer.UserName)){

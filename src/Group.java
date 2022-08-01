@@ -144,6 +144,7 @@ public class Group extends DirectMassage{
                                 }
                                 this.GroupID=NID;
                                 DircectMassageTableDBC.dircectMassageTableDBC.EditorDeleteDirect(this,false);
+                                System.out.println("ID Changed");
 
                         }
                     }
