@@ -9,7 +9,7 @@ public class PostTableDBC {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try {
 
-            connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/project1","root","Amirafzali1382");
+            connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/project1","root","#Amir-81");
 
         }
         catch (Exception e){
@@ -122,22 +122,25 @@ public class PostTableDBC {
     }
 
     public <T extends Post> void EditorDeletePost(T postinput,boolean delete)throws SQLException {
-            PreparedStatement st = connection.prepareStatement("DELETE FROM posttable WHERE PostCode = '" + postinput.PostCode + "';");
-            st.executeUpdate();
-            st.close();
-            if(!delete){
-                setPost(postinput);
-            }
+        PreparedStatement st = connection.prepareStatement("DELETE FROM posttable WHERE PostCode = '" + postinput.PostCode + "';");
+        st.executeUpdate();
+        st.close();
+        if(!delete){
+            setPost(postinput);
+        }
 
     }
 
     static List<String> getPostCode(String input){
-            if(input!=null){
+        if(input!=null){
+            if (input.length()>0){
                 String[] Arr=input.split(",");
                 List<String> list=new ArrayList<>(Arrays.stream(Arr).toList());
+
                 return list;
             }
-            return new ArrayList<String>();
+        }
+        return new ArrayList<String>();
     }
 
     public BuisnessType setBuisnessType(Integer type){
@@ -172,15 +175,18 @@ public class PostTableDBC {
 
     public String generatePostCodeString(List<String> input){
         if(input!=null){
-            StringBuilder result= new StringBuilder();
+            if (input.size()>0){
+                StringBuilder result= new StringBuilder();
 
-            for (String i:input){
-                result.append(",").append(i);
+                for (String i:input){
+                    result.append(",").append(i);
+                }
+                if (result.length()>0){
+                    result = new StringBuilder(result.substring(1));
+                    return result.toString();}
             }
-            if (result.length()>1){
-                result = new StringBuilder(result.substring(1));
-                return result.toString();}}
-        return  "";
+        }
+        return  null;
     }
 
 }

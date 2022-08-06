@@ -17,7 +17,5 @@ public class OrdinaryPost extends Post{
         this.NumberOfRetwiets=0;
         Post.PostsCodesList1.add(postcode);
         user.addPostToPosts(this);
-
-
     }
 }

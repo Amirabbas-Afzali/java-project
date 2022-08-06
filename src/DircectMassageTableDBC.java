@@ -8,7 +8,7 @@ public class DircectMassageTableDBC {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try {
 
-            connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/project1","root","Amirafzali1382");
+            connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/project1","root","#Amir-81");
 
         }
         catch (Exception e){
@@ -40,6 +40,9 @@ public class DircectMassageTableDBC {
                 group.UserNamesInChat=getPostCode(resultSet.getString("UserNamesInChat"));
                 group.Owener=resultSet.getString("GrOwner");
                 group.bio=resultSet.getString("bio");
+                group.Admins=getPostCode(resultSet.getString("Admins"));
+                group.IsPrivate=resultSet.getBoolean("IsPrivate");
+                group.GroupID=resultSet.getString("GroupID");
                 result=(T) group;
             }
             else {
@@ -60,18 +63,21 @@ public class DircectMassageTableDBC {
             Group group=(Group) directinput;
             PreparedStatement statement= connection.prepareStatement("" +
                     "INSERT INTO directmassagetable (DirectMassageCode,isGroup,MassageCodes,UserNamesInChat," +
-                    "GrOwner,bio) VALUES (?,?,?,?,?,?)");
+                    "GrOwner,bio,Admins,GroupID,IsPrivate) VALUES (?,?,?,?,?,?,?,?,?)");
             statement.setString(1,directinput.Code);
             statement.setBoolean(2,directinput.isGroup);
             statement.setString(3,generatePostCodeString(directinput.MassageCodes));
             statement.setString(4,generatePostCodeString(directinput.UserNamesInChat));
             statement.setString(5,((Group) directinput).Owener);
             statement.setString(6,((Group) directinput).bio);
+            statement.setString(7,generatePostCodeString(group.Admins));
+            statement.setString(8,group.GroupID);
+            statement.setBoolean(9,group.IsPrivate);
             statement.executeUpdate();
             statement.close();
         }
         else {
-          DirectMassage group=(DirectMassage) directinput;
+            DirectMassage group=(DirectMassage) directinput;
             PreparedStatement statement= connection.prepareStatement("" +
                     "INSERT INTO directmassagetable (DirectMassageCode,isGroup,MassageCodes,UserNamesInChat)" +
                     " VALUES (?,?,?,?)");
@@ -96,20 +102,30 @@ public class DircectMassageTableDBC {
 
     static List<String> getPostCode(String input){
         if(input!=null){
-            String[] Arr=input.split(",");
-            List<String> list=new ArrayList<>(Arrays.stream(Arr).toList());
-            return list;
+            if (input.length()>0){
+                String[] Arr=input.split(",");
+                List<String> list=new ArrayList<>(Arrays.stream(Arr).toList());
+
+                return list;
+            }
         }
         return new ArrayList<String>();
     }
 
     public String generatePostCodeString(List<String> input){
-        StringBuilder result= new StringBuilder();
-        for (String i:input){
-            result.append(",").append(i);
+        if(input!=null){
+            if (input.size()>0){
+                StringBuilder result= new StringBuilder();
+
+                for (String i:input){
+                    result.append(",").append(i);
+                }
+                if (result.length()>0){
+                    result = new StringBuilder(result.substring(1));
+                    return result.toString();}
+            }
         }
-        result = new StringBuilder(result.substring(1));
-        return result.toString();
+        return  null;
     }
 
     public List<String> getDirectMassageCodesList() throws SQLException {

@@ -7,18 +7,20 @@ public class PersonalHomepage {
     public void start(User usertemp) throws SQLException {
         boolean flag=true;
         while (flag){
-            String str, strtemp = "Enter a number:\n1.Create new post\n2.show timeline\n3.Complete or Edit personal information\n4.My chats and PVs\n5.My contacts (followers & followings & ...)" +
-                    "\n6.Show My posts\n7.back ";
+            if(!usertemp.isreport){
+            String str, strtemp = "Enter a number:\n1.Create new post\n2.show timeline\n3.Complete or Edit personal information" +
+                    "\n4.My chats and PVs\n5.My contacts (followers & followings & ...)" +
+                    "\n6.Show My posts\n7.Add Story\n8.back ";
             System.out.println(strtemp);
             str = Main.scanner.nextLine();
-            str.trim();
+            str=str.trim();
             if (str.equals("1")) {
                 CreatenewPost.createnewPost.user=usertemp;
               CreatenewPost.createnewPost.start();
             }
             else if (str.equals("2")) {
-                ShowTimeline.showTimeline.user=usertemp;
-                ShowTimeline.showTimeline.start();
+               // ShowTimeline.showTimeline.user=;
+                ShowTimeline.showTimeline.start(usertemp);
             }
             else if (str.equals("3")) {
                 CompletePersonalInformation.completePersonalInformation.user=usertemp;
@@ -32,15 +34,47 @@ public class PersonalHomepage {
                 Mycontacts.mycontacts.start(usertemp);
             }
             else if (str.equals("6")) {
-                ShowPosts.showPosts.user=usertemp;
-            ShowPosts.showPosts.start();
+                ShowPosts.showPosts.start(usertemp,usertemp);
             }
             else if (str.equals("7")) {
-            flag=false;
-            SignIn.signIn.start();
+                CreatenewStory.createnewStory.user=usertemp;
+                CreatenewStory.createnewStory.start();
+            }
+            else if (str.equals("8")) {
+                flag=false;
+                SignIn.signIn.start();
             }
             else {
                 System.out.println("Invalid command!");
+            }}
+            else {   String str, strtemp = "Enter a number:\n1.show timeline\n2.Complete or Edit personal information" +
+                    "\n3.My chats and PVs\n4.My contacts (followers & followings & ...)" +
+                    "\n5.back ";
+                System.out.println(strtemp);
+                str = Main.scanner.nextLine();
+                str=str.trim();
+
+                 if (str.equals("1")) {
+                    ShowTimeline.showTimeline.start(usertemp);
+                }
+                else if (str.equals("2")) {
+                    CompletePersonalInformation.completePersonalInformation.user=usertemp;
+                    CompletePersonalInformation.completePersonalInformation.start();
+                }
+                else if (str.equals("3")) {
+                    MychatsandPVs.mychatsandPVs.user=usertemp;
+                    MychatsandPVs.mychatsandPVs.start();
+                }
+                else if (str.equals("4")) {
+                    Mycontacts.mycontacts.start(usertemp);
+                }
+                else if (str.equals("5")) {
+                    flag=false;
+                    SignIn.signIn.start();
+                }
+                else {
+                    System.out.println("Invalid command!");
+                }
             }
 
             }
