@@ -13,7 +13,7 @@ public class MassageTableDBC {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try {
 
-            connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/project1","root","#Amir-81");
+            connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/project1","root","Amirafzali1382");
 
         }
         catch (Exception e){

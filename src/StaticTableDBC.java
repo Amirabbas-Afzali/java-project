@@ -4,7 +4,7 @@ public class StaticTableDBC {
     StaticTableDBC() throws ClassNotFoundException , SQLException  {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try {
-            connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/project1","root","#Amir-81");
+            connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/project1","root","Amirafzali1382");
         }
         catch (Exception e){
             System.out.println("Error in Connection !");
