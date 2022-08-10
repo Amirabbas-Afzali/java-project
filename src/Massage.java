@@ -142,7 +142,7 @@ public class Massage {
                 }
             }
             if (input.equals("5")&&Edite){
-                System.out.println("1:Edit\n2:View Likes");
+                System.out.println("1:Edit\n2:View Likes\n3:Delete");
                 String input2=Main.scanner.nextLine().trim();
                 if (input2.equals("1")){
                    System.out.println("Enter replacement text : ");
@@ -152,7 +152,22 @@ public class Massage {
                 if (input2.equals("2")){
                     LikeManager();
                 }
+                if (input2.equals("3")){
+                    Delete();
+                }
             }
+        }
+    }
+    void Delete(){
+        System.out.println("Do you want to confirm delete?\n1:Yes\n2:No");
+        String input=Main.scanner.nextLine();
+        if (input.trim().equals("1")){
+             if (DeleteMassageFull(this.massageCode)){
+                 System.out.println("Massage Deleted");
+             }
+        }
+        if (input.trim().equals("2")){
+            System.out.println("Action cancelled");
         }
     }
     void LikeManager(){
@@ -245,6 +260,63 @@ public class Massage {
         }
         return false;
     }
+    public boolean BeforeDeleteMassage(){
+        for (Post i:MAINInformation.mainInformation.posts.values()){
+            if (i.CommentsCodesList.contains(this.massageCode)){
+                for (String j:this.ReplyMassagesCodes){
+                    i.AddCommentCode(j);
+
+                }
+                i.CommentsCodesList.remove(this.massageCode);
+                try {
+                    PostTableDBC.postTableDBC.EditorDeletePost(i,false);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        }
+        for (DirectMassage i:MAINInformation.mainInformation.directmassages.values()){
+            if (i.MassageCodes.contains(this.massageCode)){
+                for (String j:this.ReplyMassagesCodes){
+                    try {
+                        i.addMassage(j);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                i.MassageCodes.remove(this.massageCode);
+                try {
+                    DircectMassageTableDBC.dircectMassageTableDBC.EditorDeleteDirect(i,false);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        }
+        for (Massage i:MAINInformation.mainInformation.massages.values()){
+            if (i.ReplyMassagesCodes.contains(this.massageCode)){
+                for (String j:this.ReplyMassagesCodes){
+                    try {
+                        i.AddReplyToList(j);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                i.ReplyMassagesCodes.remove(this.massageCode);
+                try {
+                    MassageTableDBC.massageTableDBC.EditOrDeleteMassage(i,false);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     static Date getNDaysAgo(int input2){
         //Long miliSecond= input2 *60*60*24*1000;
         Date today = new Date();
@@ -257,5 +329,17 @@ public class Massage {
 // convert calendar to date
         Date modifiedDate = cal.getTime();
         return modifiedDate;
+    }
+    public static boolean DeleteMassageFull(String MassageCode){
+
+        try {
+            MAINInformation.mainInformation.massages.get(MassageCode).BeforeDeleteMassage();
+            MassageTableDBC.massageTableDBC.EditOrDeleteMassage(MAINInformation.mainInformation.massages.get(MassageCode),true);
+            MAINInformation.mainInformation.massages.remove(MassageCode);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
     }
 }

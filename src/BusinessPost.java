@@ -42,7 +42,7 @@ class BusinessPost extends Post{
         this.addLikeOrRemove(LikeHandle.NewLikeHandles(Viewer.UserName,"-2",true),true);
         System.out.println("Post Code : "+PostCode+"  ,  "+"Poster : "+PosterName+
                 "\n  Date:  "+DateFormat.dateFormat.reportdate(date)+"   ,   Likes : "+getNumberOfLikes()+"  " +
-                " \n Views : "+ ViewersUserNames.size()+"  ,    " +" Repost : "+RepostersList.size()+"  " +
+                " \n Views : "+ getViewsNumber()+"  ,    " +" Repost : "+RepostersList.size()+"  , comments : "+CommentThreeNumber() +
                 "\n  Business Type : "+buisnessType.toString()+
                 "\n Caption : "+Caption+"  \n  Description : "+description);
 
@@ -157,7 +157,7 @@ class BusinessPost extends Post{
     void ExclusiveBus() throws SQLException{
         String input="";
         while (!input.equals("Back")){
-            System.out.println("1:View Recent Views\n2:View Recent Likes\n3:Edit");
+            System.out.println("1:View Recent Views\n2:View Recent Likes\n3:Edit\n4:Pay for Ad\nBack");
             input=Main.scanner.nextLine().trim();
             if (input.equals("1")){
                 ViewViews();
@@ -167,6 +167,9 @@ class BusinessPost extends Post{
             }
             if (input.equals("3")){
                 Edit();
+            }
+            if (input.equals("4")){
+                PayAd();
             }
         }
     }
@@ -275,9 +278,28 @@ class BusinessPost extends Post{
         this.description=newDes;
         PostTableDBC.postTableDBC.EditorDeletePost(this,false);
     }
+    public void PayAd(){
+        String input="";
+        System.out.println("Every coefficient is 1 dollars how many do you want?\nBack");
+        input=Main.scanner.nextLine();
+        if (!input.equals("Back")){
+            try {
+                setADMoney(Integer.parseInt(input)*100);
+            }
+            catch (Exception ee){
+                System.out.println("invalid command");
+            }
+        }
+    }
 
     /////////////////////////////////////////////////////////////
-
+    public Integer getViewsNumber(){
+        int result=0;
+        for (String i:LikedList){
+            result+=MAINInformation.mainInformation.likeHandleMap.get(i).ShowLikeHandle(false,new Date(),true,true);
+        }
+        return result;
+    }
     public void LoadViewersUserNames(){}
     //public static BusinessPost getBusinessPost(String Code){return new BusinessPost();}
     //BuisnessType buisnessType=BuisnessType.NotSpecial;

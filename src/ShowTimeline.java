@@ -265,8 +265,16 @@ public class ShowTimeline {
         input2=Main.scanner.nextLine().trim();
         try {
             List<Post> Posts=showTimeline.TimeLinePosts(Integer.parseInt(input2),user);
+            List<Post > AddExtra=GetUserFavPostTypes.getSuggestionPostsForUser(user);
+
             for (Post i:Posts){
                 i.preShow();
+            }
+            for (Post i:AddExtra){
+                if (!Posts.contains(i)&&!user.PostCodesList.contains(i.PostCode)){
+                System.out.print("AD post :");
+                i.preShow();
+                }
             }
             String input="";
             while (!input.equals("Back")) {
@@ -282,11 +290,13 @@ public class ShowTimeline {
                 }
                 catch (Exception e){
                     if (!input.equals("Back"))
+                      //  e.printStackTrace();
                     System.out.println("Invalid command");
                 }
             }
         }
         catch (Exception e){
+           // e.printStackTrace();
             System.out.println("Invalid command");
         }
         }

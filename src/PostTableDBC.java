@@ -45,6 +45,7 @@ public class PostTableDBC {
                 businessPost.PosterName=resultSet.getString("PosterUserName");
                 businessPost.description=resultSet.getString("BusDescription");
                 businessPost.buisnessType=setBuisnessType(resultSet.getInt("BusTypeINT"));
+                businessPost.ADMoney=resultSet.getInt("ADMoney");
                 result=(T)businessPost;
             }
             else {
@@ -58,6 +59,7 @@ public class PostTableDBC {
                 businessPost.CommentsCodesList=getPostCode(resultSet.getString("CommentsCodesList"));
                 businessPost.PosterName=resultSet.getString("PosterUserName");
                 businessPost.isprivate=resultSet.getBoolean("Ordisprivate");
+                businessPost.ADMoney=resultSet.getInt("ADMoney");
                 //Add User
                 businessPost.userposter=UserTableDBC.userTableDBC.getUser(businessPost.PosterName);
                 result=(T)businessPost;
@@ -75,7 +77,7 @@ public class PostTableDBC {
                     "INSERT INTO posttable (PostCode,Caption,Kind,date," +
                     "RepostersList,LikedList,CommentsCodesList,Ordisprivate," +
                     "BusViewersUserNames,PosterUserName,BusTypeINT," +
-                    "BusDescription) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+                    "BusDescription,ADMoney) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
             statement.setNString(1,post.PostCode);
             statement.setNString(2,post.Caption);
             statement.setBoolean(3,post.Kind);
@@ -88,13 +90,14 @@ public class PostTableDBC {
             statement.setNString(10,post.PosterName);
             statement.setInt(11,post.buisnessTypeINT);
             statement.setString(12,post.description);
+            statement.setInt(13,post.ADMoney);
             statement.executeUpdate();
             statement.close();
         }
         else {
             OrdinaryPost post=(OrdinaryPost) postinput;
             PreparedStatement statement= connection.prepareStatement("" +
-                    "INSERT INTO posttable (PostCode,Caption,Kind,date,RepostersList,LikedList,CommentsCodesList,Ordisprivate,PosterUserName) VALUES (?,?,?,?,?,?,?,?,?)");
+                    "INSERT INTO posttable (PostCode,Caption,Kind,date,RepostersList,LikedList,CommentsCodesList,Ordisprivate,PosterUserName,ADMoney) VALUES (?,?,?,?,?,?,?,?,?,?)");
             statement.setNString(1,post.PostCode);
             statement.setNString(2,post.Caption);
             statement.setBoolean(3,post.Kind);
@@ -104,6 +107,7 @@ public class PostTableDBC {
             statement.setNString(7,generatePostCodeString(post.CommentsCodesList));
             statement.setBoolean(8,false);
             statement.setNString(9,post.PosterName);
+            statement.setInt(10,post.ADMoney);
             statement.executeUpdate();
             statement.close();
         }

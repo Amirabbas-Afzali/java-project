@@ -9,8 +9,6 @@ public class Main {
         //*****************************************
         MAINInformation.mainInformation.UpdateMainInfo();
        SignIn.signIn.start();
-
         //*****************************************
-
     }
 }

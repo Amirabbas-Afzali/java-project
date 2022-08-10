@@ -52,6 +52,7 @@ public class StaticTableDBC {
     void SetCodeNumber(String WhatStatic,Integer value1) throws SQLException {
         String field="";
         if (WhatStatic.contains("Post")){
+           // System.out.println(value1);
             field="PostNumber";
         }
         if (WhatStatic.contains("Massage")&&!WhatStatic.contains("Direct")){

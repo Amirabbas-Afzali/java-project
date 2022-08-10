@@ -51,6 +51,7 @@ public class CreatenewPost {
     public String createpostcode() throws SQLException {
         String result=String.valueOf(Post.PostCodeStatic);
         Post.PostCodeStatic++;
+
         StaticTableDBC.staticTableDBC.SetCodeNumber("Post",Post.PostCodeStatic);
         return result;
     }

@@ -3,6 +3,7 @@ import java.sql.Time;
 import java.util.*;
 
 public class Post {
+    Integer ADMoney=1;
     static List<String> PostsCodesList1=new ArrayList<>();
     public String PostCode="";
     public static Integer PostCodeStatic;
@@ -22,7 +23,7 @@ public class Post {
         String input="";
         while ((!(input.equals("6")&&IsPrivate()))&&(!(input.equals("7")&&!IsPrivate()))){
             System.out.println("Post Code : "+PostCode+"  ,  "+"Poster : "+PosterName +
-                    "\n  Date:  "+DateFormat.dateFormat.reportdate(date)+"   ,    Likes : "+getNumberOfLikes()+"   ,  Comments :  " +CommentsCodesList.size()+
+                    "\n  Date:  "+DateFormat.dateFormat.reportdate(date)+"   ,    Likes : "+getNumberOfLikes()+"   ,  Comments :  " +this.CommentThreeNumber()+
                     "\n Caption :  " +Caption+"   ,    Repost : "+RepostersList.size());
             System.out.println("1:view comments\n 2:view Likes\n 3:view Reposters ");
             if (UserNameLiked(user.UserName)){
@@ -240,4 +241,24 @@ public class Post {
             }
         }
     }
+    @Override
+    public boolean equals(Object input){
+        try {
+            return ((Post) input).PostCode.equals(this.PostCode);
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
+    public void setADMoney(Integer input){
+        ADMoney=input;
+    }
+     public void AddCommentCode(String Code){
+        this.CommentsCodesList.add(Code);
+         try {
+             PostTableDBC.postTableDBC.EditorDeletePost(this,false);
+         } catch (SQLException e) {
+             e.printStackTrace();
+         }
+     }
 }
